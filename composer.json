@@ -1,0 +1,17 @@
+{
+  "name": "gh-stats/shields",
+  "description": "Shields generator from gh-stats",
+  "homepage": "https://gh-stats.app",
+  "license": "MIT",
+  "scripts": {
+    "pre-start": [
+      "Composer\\Config::disableProcessTimeout"
+    ],
+    "start": "php -S localhost:8080 -t public",
+    "test": "phpunit"
+  },
+  "require": {
+    "ext-mysqli": "*",
+    "pecee/simple-router": "4.3.7.2"
+  }
+}

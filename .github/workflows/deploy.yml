@@ -1,0 +1,44 @@
+name: Build & Publish
+
+on: [ push ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          coverage: xdebug
+
+      - name: Install dependencies with Composer
+        uses: ramsey/composer-install@v2
+
+      - name: Create config
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_TABLE: ${{ secrets.DB_TABLE }}
+        run: |
+          touch config.php
+          echo \$db_host="$DB_HOST"\; >> config.php
+          echo \$db_user="$DB_USER"\; >> config.php
+          echo \$db_password="$DB_PASSWORD"\; >> config.php
+          echo \$db_table="$DB_TABLE"\; >> config.php
+        shell: bash
+
+      - uses: easingthemes/ssh-deploy@main
+        if: github.ref == 'refs/heads/main'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SOURCE: "./"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
