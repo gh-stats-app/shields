@@ -27,6 +27,7 @@ jobs:
           DB_TABLE: ${{ secrets.DB_TABLE }}
         run: |
           touch config.php
+          echo '<?php' >> config.php
           echo \$db_host="$DB_HOST"\; >> config.php
           echo \$db_user="$DB_USER"\; >> config.php
           echo \$db_password="$DB_PASSWORD"\; >> config.php
