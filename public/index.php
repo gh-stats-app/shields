@@ -11,7 +11,8 @@ SimpleRouter::get('/badge', function () use ($db_host, $db_user, $db_password, $
     $action = $request->getInputHandler()->get('action', '');
 
     if (!str_contains($action, '/')) {
-        header("HTTP/1.1 400 Bad request");
+        header('HTTP/1.1 400 Bad request');
+        http_response_code(400);
         die();
     }
 
@@ -41,8 +42,8 @@ SimpleRouter::get('/badge', function () use ($db_host, $db_user, $db_password, $
     $opts = ['http' => ['method' => "GET", 'header' => "Accept-language: en\r\n" . "User-Agent: gh-stats.app\r\n"]];
     $context = stream_context_create($opts);
 
-    header('Content-Type', 'image/svg+xml');
-    header('Cache-Control', 'max-age=60, public');
+    header('Content-Type: image/svg+xml');
+    header('Cache-Control: max-age=60, public');
 
     return file_get_contents($url, false, $context);
 });
