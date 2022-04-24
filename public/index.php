@@ -36,8 +36,9 @@ SimpleRouter::get('/badge', function () use ($db_host, $db_user, $db_password, $
     $label = 'Used ';
     $message = sprintf('%d times', $stmt->get_result()->fetch_column(0));
     $color = $request->getInputHandler()->get('color', 'brightgreen');
+    $style = $request->getInputHandler()->get('style', '');
 
-    $url = sprintf("https://img.shields.io/badge/%s-%s-%s", rawurlencode($label), rawurlencode($message), rawurlencode($color));
+    $url = sprintf("https://img.shields.io/badge/%s-%s-%s?style=%s", rawurlencode($label), rawurlencode($message), rawurlencode($color), rawurldecode($style));
 
     $opts = ['http' => ['method' => "GET", 'header' => "Accept-language: en\r\n" . "User-Agent: gh-stats.app\r\n"]];
     $context = stream_context_create($opts);
